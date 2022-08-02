@@ -8,9 +8,12 @@ const upload = multer({ dest: "uploads/" });
 const { uploadFile, getFileStream } = require("./services/s3");
 
 const artworkRouter = require("./routes/artwork");
+const db = require("./services/db");
 const cors = require("cors");
 const artworkService = require("./services/artwork");
 const port = process.env.PORT || 8080;
+
+db.initDb();
 
 app.get("/", (req, res) => {
   res.json({ message: "ok" });

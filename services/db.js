@@ -11,8 +11,13 @@ const dbConfig = {
   connectionLimit: 10
 };
 
+let connection;
+
+const initDb = async () => {
+  connection = await mysql.createConnection(dbConfig);
+}
+
 async function query(sql, params) {
-  const connection = await mysql.createConnection(dbConfig);
   const [results] = await connection.execute(sql, params);
 
   return results;
@@ -20,4 +25,5 @@ async function query(sql, params) {
 
 module.exports = {
   query,
+  initDb
 };
