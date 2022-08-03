@@ -2,7 +2,7 @@ if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 const S3 = require("aws-sdk/clients/s3");
-const fs = require("fs");
+const sharp = require("sharp");
 
 const bucketName = process.env.AWS_BUCKET_NAME;
 const region = process.env.AWS_BUCKET_REGION;
@@ -15,13 +15,12 @@ var s3 = new S3({
   secretAccessKeyId,
 });
 
-const uploadFile = (file) => {
-  // file is file path on the server coming from multer
-  const readStream = fs.createReadStream(file.path);
+const uploadFile = async (file) => {
+  const resizedFile = await sharp(file.path).png().resize(null, 500).toBuffer();
 
   const uploadParams = {
     Bucket: bucketName,
-    Body: readStream,
+    Body: resizedFile,
     Key: file.filename, // key is the name of the file within the s3 bucket
   };
 
